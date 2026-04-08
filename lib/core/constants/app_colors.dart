@@ -7,4 +7,5 @@ class AppColors {
   static const Color tertiaryColor = Color(0xffFFD600);
   static const Color neturalColor = Color(0xff0A0A0F);
   static const Color labelColor = Color(0xffACAAB1);
+  static const Color containerColor = Color(0xff131319);
 }

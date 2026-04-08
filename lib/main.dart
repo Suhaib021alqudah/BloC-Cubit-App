@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rickandmorbloc/core/routing/app_routes.dart';
 import 'package:rickandmorbloc/core/routing/router_gen.dart';
 
 void main() {
@@ -20,6 +21,7 @@ class RickAndMory extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           onGenerateRoute: appRoutes.generateRoute,
+          initialRoute: AppRoutes.charactersScreen,
         );
       },
     );

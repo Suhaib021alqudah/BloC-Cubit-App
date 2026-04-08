@@ -19,15 +19,20 @@ class AppTextStyle {
     letterSpacing: 2.93,
   );
 
-  static TextStyle labelTextStyle = GoogleFonts.epilogue(
+  static TextStyle labelTextStyle = GoogleFonts.plusJakartaSans(
     fontSize: 17.3.sp,
     color: AppColors.labelColor,
-    fontWeight: FontWeight.w900,
-    letterSpacing: 2.93,
+    fontWeight: FontWeight.w300,
   );
 
   static TextStyle listTextStyle = GoogleFonts.nunito(
     fontSize: 14.sp,
     color: AppColors.lightGreen,
+  );
+
+  static TextStyle characterNameTextStyle = GoogleFonts.plusJakartaSans(
+    fontWeight: FontWeight.w800,
+    color: AppColors.lightGreen,
+    fontSize: 20.sp,
   );
 }

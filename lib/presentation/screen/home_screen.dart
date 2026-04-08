@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -62,12 +60,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: AppTextStyle.labelTextStyle,
                 ),
                 const Gap(32),
-                ListView.builder(
-                  itemCount: episodesNumber.length,
-                  scrollDirection: .horizontal,
-                  itemBuilder: (context, index) {
-                    return ListButton(episodeNumber: episodesNumber[index]);
-                  },
+                SizedBox(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: 24.h,
+                  child: ListView.builder(
+                    itemCount: episodesNumber.length,
+                    scrollDirection: .horizontal,
+                    itemBuilder: (context, index) {
+                      return ListButton(episodeNumber: episodesNumber[index]);
+                    },
+                  ),
                 ),
               ],
             ),
