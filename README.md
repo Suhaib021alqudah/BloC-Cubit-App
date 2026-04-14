@@ -1,177 +1,161 @@
-# Rick & Morty BLoC
+# Rick and Morty BLoC
 
-A Flutter application that fetches and displays characters from the [Rick and Morty API](https://rickandmortyapi.com/), built with the BLoC (Cubit) state management pattern and a clean layered architecture.
+A Flutter training project that uses `Cubit` and a small layered architecture to fetch Rick and Morty characters from the public API and render them in a neon-styled UI.
 
----
+## Overview
+
+This project is built around two main presentation flows:
+
+- `HomeScreen`: the current initial route. It shows an episode-themed landing screen with season chips and project styling.
+- `CharactersScreen`: a character catalog screen backed by the Rick and Morty API, including client-side search by character name.
+
+The app currently starts on `/`, and `/charactersScreen` is already registered in the router. At the moment, the home screen does not navigate to the characters screen yet, so both screens exist but are not fully connected through the UI.
 
 ## Features
 
-- Browse Rick & Morty characters fetched from the public REST API
-- Character cards showing image, name, species, and alive/dead status
-- Search characters by name
-- Episode browser screen with season selector
-- Responsive UI (designed for 390x964 dp) using `flutter_screenutil`
-- Dark theme with neon accent colors matching the show's aesthetic
-
----
-
-## Architecture
-
-The project follows **Clean Architecture** with four distinct layers:
-
-```text
-lib/
-├── main.dart
-├── business_logic/        # BLoC (Cubit) — state & business rules
-│   └── cubit/
-│       ├── rickandmory_cubit.dart
-│       └── rickandmory_state.dart
-├── core/                  # Shared utilities
-│   ├── constants/         # Colors, text styles, string constants
-│   └── routing/           # Route names & route generator (DI container)
-├── data/                  # Data access
-│   ├── models/            # JSON-serialisable model classes
-│   ├── repository/        # Single source of truth
-│   └── web_services/      # Dio HTTP client
-└── presentation/          # UI only
-    ├── screen/
-    └── widget/
-```
-
-### Data flow
-
-```text
-UI (screen/widget)
-  ↕  BlocProvider / BlocBuilder
-Business Logic (RickandmoryCubit)
-  ↕
-Repository (CharactersRepository)
-  ↕
-Web Services (CharactersWebServices / Dio)
-  ↕
-Rick & Morty REST API
-```
-
----
+- Fetches character data from `https://rickandmortyapi.com/api/character`
+- Parses API responses into Dart model classes
+- Uses `Cubit` for loading, success, and error states
+- Displays characters in a responsive grid
+- Supports live prefix search on the loaded character list
+- Uses a custom dark palette and Google Fonts for the Rick and Morty-inspired look
+- Uses `flutter_screenutil` with a base design size of `390 x 964`
 
 ## Tech Stack
 
-| Package              | Purpose                              |
-| -------------------- | ------------------------------------ |
-| `flutter_bloc`/`bloc`| BLoC / Cubit state management        |
-| `dio`                | HTTP client for API calls            |
-| `flutter_screenutil` | Responsive sizing                    |
-| `google_fonts`       | Epilogue, Plus Jakarta Sans, Nunito  |
-| `gap`                | Simplified spacing widget            |
-| `go_router`          | Declarative navigation               |
-| `flutter_offline`    | Offline connectivity detection       |
+- `flutter`
+- `bloc` and `flutter_bloc`
+- `dio`
+- `flutter_screenutil`
+- `google_fonts`
+- `gap`
+- `meta`
 
----
+## Project Structure
 
-## Project Structure — Key Files
+```text
+lib/
+|-- main.dart
+|-- business_logic/
+|   `-- cubit/
+|       |-- rickandmory_cubit.dart
+|       `-- rickandmory_state.dart
+|-- core/
+|   |-- constants/
+|   |   |-- app_colors.dart
+|   |   |-- app_text_style.dart
+|   |   `-- strings.dart
+|   `-- routing/
+|       |-- app_routes.dart
+|       `-- router_gen.dart
+|-- data/
+|   |-- models/
+|   |   `-- characters_model.dart
+|   |-- repository/
+|   |   `-- character_repository.dart
+|   `-- web_services/
+|       `-- characters_web_services.dart
+`-- presentation/
+    |-- screen/
+    |   |-- characters_screen.dart
+    |   `-- home_screen.dart
+    `-- widget/
+        |-- character_widget.dart
+        `-- list_button.dart
+```
 
-| File | Role |
-| --- | --- |
-| `main.dart` | App entry point, `ScreenUtilInit` wrapper |
-| `core/routing/router_gen.dart` | Route generation + dependency injection |
-| `core/routing/app_routes.dart` | Route name constants |
-| `core/constants/app_colors.dart` | App-wide color palette |
-| `core/constants/app_text_style.dart` | Centralised `TextStyle` definitions |
-| `core/constants/strings.dart` | API base URL and route strings |
-| `data/web_services/characters_web_services.dart` | `getAllCharacters()` via Dio |
-| `data/repository/character_repository.dart` | Repository layer |
-| `data/models/characters_model.dart` | `CharactersModel`, `Results`, `Info`, `Origin` |
-| `business_logic/cubit/rickandmory_cubit.dart` | `getAllCharacters()`, `searchCharacters()` |
-| `business_logic/cubit/rickandmory_state.dart` | `RickandmoryInitial`, `CharactersLoaded`, `CharactersError` |
-| `presentation/screen/home_screen.dart` | Episodes browser screen |
-| `presentation/widget/character_widget.dart` | Character card widget |
-| `presentation/widget/list_button.dart` | Season selector button |
+## Architecture
 
----
+The data flow in the character feature is:
+
+```text
+CharactersScreen
+  -> RickandmoryCubit
+  -> CharactersRepository
+  -> CharactersWebServices
+  -> Rick and Morty API
+```
+
+Responsibilities are split like this:
+
+- `presentation`: screens and reusable widgets
+- `business_logic`: cubit and state classes
+- `data`: API calls, repository abstraction, and JSON models
+- `core`: constants and route generation
+
+## Routing
+
+Defined routes:
+
+- `/` -> `HomeScreen`
+- `/charactersScreen` -> `CharactersScreen`
+- `/episodeScreen` -> declared in `AppRoutes` but not implemented in `RouterGenerate`
+- `/dimensionsScreen` -> declared in `AppRoutes` but not implemented in `RouterGenerate`
 
 ## API
 
-Base URL: `https://rickandmortyapi.com/api/`
+Base URL:
 
-| Endpoint         | Used for                          |
-| ---------------- | --------------------------------- |
-| `GET /character` | Fetch all characters (paginated)  |
-
-Response shape (simplified):
-
-```json
-{
-  "info": { "count": 826, "pages": 42, "next": "...", "prev": null },
-  "results": [
-    {
-      "id": 1,
-      "name": "Rick Sanchez",
-      "status": "Alive",
-      "species": "Human",
-      "gender": "Male",
-      "origin": { "name": "Earth", "url": "..." },
-      "image": "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-      "episode": ["..."],
-      "url": "...",
-      "created": "..."
-    }
-  ]
-}
+```text
+https://rickandmortyapi.com/api/
 ```
 
----
+Used endpoint:
+
+```text
+GET /character
+```
+
+## Assets
+
+Current project asset used by the UI:
+
+- `assets/images/rickyImage.png`
 
 ## Getting Started
 
 ### Prerequisites
 
-- Flutter SDK `>=3.11.3`
-- Dart SDK `>=3.11.3`
-- An Android/iOS emulator or physical device
+- Flutter SDK compatible with `sdk: ^3.11.3`
+- Dart SDK compatible with `sdk: ^3.11.3`
+- An emulator, simulator, browser, or physical device
 
-### Run
+### Install dependencies
 
 ```bash
-# Install dependencies
 flutter pub get
+```
 
-# Run on connected device
+### Run the app
+
+```bash
 flutter run
 ```
 
-### Build
+### Build examples
 
 ```bash
-# Android APK
 flutter build apk
-
-# iOS (macOS only)
-flutter build ios
+flutter build web
 ```
 
----
+## Current Notes
 
-## Screens
+- The characters search works on the already fetched in-memory list.
+- Error handling is basic and surfaces the exception text in the UI.
+- The episode chips are currently visual only.
+- There is no `test/` directory yet, so automated tests are not included at this stage.
 
-| Route | Screen |
-| --- | --- |
-| `/charactersScreen` | Character list (initial route) |
-| `/` | Episodes browser (home) |
-| `/episodeScreen` | Episode details (stub) |
-| `/dimensionsScreen` | Dimensions details (stub) |
+## Learning Goals
 
----
+This project is a good reference for practicing:
 
-## Assets
-
-```text
-assets/
-└── images/
-    └── rickyImage.png   # Rick & Morty hero image
-```
-
----
+- Flutter folder organization
+- `Cubit` state management
+- REST API integration with `Dio`
+- JSON parsing into model classes
+- Responsive UI with `flutter_screenutil`
 
 ## License
 
-This project is for educational/training purposes and is not affiliated with or endorsed by Adult Swim or the Rick and Morty franchise.
+This project appears to be a training and learning project. Rick and Morty and related names/assets belong to their respective owners.

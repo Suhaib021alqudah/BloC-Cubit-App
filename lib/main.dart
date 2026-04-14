@@ -21,7 +21,7 @@ class RickAndMory extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           onGenerateRoute: appRoutes.generateRoute,
-          initialRoute: AppRoutes.charactersScreen,
+          initialRoute: AppRoutes.homeScreen,
         );
       },
     );
