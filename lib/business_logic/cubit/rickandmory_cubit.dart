@@ -11,12 +11,30 @@ class RickandmoryCubit extends Cubit<RickandmoryState> {
   RickandmoryCubit({required this.charactersRepository})
     : super(RickandmoryInitial());
 
+  List<Results> allCharacters = [];
+  List<Results> searchedCharacters = [];
+
   void getAllCharacters() async {
     try {
       final characters = await charactersRepository.getAllCharacters();
-      emit(CharactersLoaded(characters.results!));
+      allCharacters = characters.results!;
+      emit(CharactersLoaded(allCharacters));
     } catch (e) {
       emit(CharactersError(e.toString()));
     }
+  }
+
+  void searchCharacters(String name) {
+    if (name.isEmpty) {
+      emit(CharactersLoaded(allCharacters));
+      return;
+    }
+    searchedCharacters = allCharacters
+        .where(
+          (char) => char.name!.toLowerCase().startsWith(name.toLowerCase()),
+        )
+        .toList();
+
+    emit(CharactersLoaded(searchedCharacters));
   }
 }

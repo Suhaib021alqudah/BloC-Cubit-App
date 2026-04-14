@@ -34,8 +34,6 @@ class RouterGenerate {
             child: const CharactersScreen(),
           ),
         );
-      case AppRoutes.charactersScreen:
-        return MaterialPageRoute(builder: (_) => const CharactersScreen());
 
       case AppRoutes.episodeScreen:
         return MaterialPageRoute(builder: (_) => const EpisodeScreen());

@@ -17,7 +17,27 @@ class CharactersScreen extends StatefulWidget {
 }
 
 class _CharactersScreenState extends State<CharactersScreen> {
-  List<Results> allCharacters = [];
+  bool isSearching = false;
+
+  final TextEditingController serachingTextController = TextEditingController();
+
+  Widget searchFiledWidget() {
+    return TextField(
+      controller: serachingTextController,
+      cursorColor: AppColors.primaryColor,
+      decoration: InputDecoration(
+        hintText: 'Find a Character',
+        hintStyle: AppTextStyle.labelTextStyle.copyWith(fontSize: 12),
+
+        border: InputBorder.none,
+      ),
+      onChanged: (searchValue) {
+        BlocProvider.of<RickandmoryCubit>(
+          context,
+        ).searchCharacters(searchValue);
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -30,16 +50,16 @@ class _CharactersScreenState extends State<CharactersScreen> {
     return BlocBuilder<RickandmoryCubit, RickandmoryState>(
       builder: (context, state) {
         if (state is CharactersLoaded) {
-          allCharacters = state.characters.cast<Results>();
-          return buildCharactersList();
-        } else {
-          return const Center(child: CircularProgressIndicator());
+          return buildCharactersList(state.characters);
+        } else if (state is CharactersError) {
+          return Center(child: Text('Error: ${state.error}'));
         }
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
 
-  Widget buildCharactersList() {
+  Widget buildCharactersList(List<Results> characters) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -47,13 +67,11 @@ class _CharactersScreenState extends State<CharactersScreen> {
         crossAxisSpacing: 16.w,
         mainAxisSpacing: 16.h,
       ),
-
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: allCharacters.length,
-      scrollDirection: .vertical,
+      itemCount: characters.length,
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return CharacterWidget(character: allCharacters[index]);
+        return CharacterWidget(character: characters[index]);
       },
     );
   }
@@ -65,29 +83,51 @@ class _CharactersScreenState extends State<CharactersScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.neturalColor,
         elevation: 0,
-        title: Text('RICK & MORTY', style: AppTextStyle.headTextStyle),
+        title: isSearching
+            ? searchFiledWidget()
+            : Text('RICK & MORTY', style: AppTextStyle.headTextStyle),
 
         actions: [
-          SizedBox(
-            width: MediaQuery.sizeOf(context).width,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Row(
-                children: [
-                  Text('RICK & MORTY', style: AppTextStyle.headTextStyle),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.search,
-                      size: 40,
-                      color: AppColors.primaryColor,
+          if (!isSearching)
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Row(
+                  children: [
+                    Text('RICK & MORTY', style: AppTextStyle.headTextStyle),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          isSearching = true;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.search,
+                        size: 40,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+            )
+          else
+            IconButton(
+              onPressed: () {
+                serachingTextController.clear();
+                BlocProvider.of<RickandmoryCubit>(context).searchCharacters('');
+                setState(() {
+                  isSearching = false;
+                });
+              },
+              icon: const Icon(
+                Icons.clear,
+                size: 40,
+                color: AppColors.primaryColor,
               ),
             ),
-          ),
         ],
       ),
       body: SingleChildScrollView(
