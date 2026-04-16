@@ -58,7 +58,7 @@ lib/
 `-- presentation/
     |-- screen/
     |   |-- characters_screen.dart
-    |   `-- home_screen.dart
+    |   
     `-- widget/
         |-- character_widget.dart
         `-- list_button.dart
@@ -82,6 +82,14 @@ Responsibilities are split like this:
 - `business_logic`: cubit and state classes
 - `data`: API calls, repository abstraction, and JSON models
 - `core`: constants and route generation
+
+## 📸 Screenshots
+
+| Character Screen |
+| :---: | :---: | :---: | :---: |
+| <img src="HomeScreen.png" width="180">  |
+
+
 
 ## Routing
 
