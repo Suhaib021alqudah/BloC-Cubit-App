@@ -87,7 +87,7 @@ Responsibilities are split like this:
 
 | Character Screen | Inventory/Stats |
 | :---: | :---: |
-| <img src="screenshots/characterScreen.png" width="250"> | <img src="screenshots/characterScreen.png" width="250"> |
+| <img src="screenshots/characterScreen.png" width="250"> | <img src="screenshots/searching.png" width="250"> |
 
 
 ## Routing
