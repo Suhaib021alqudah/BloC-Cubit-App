@@ -83,6 +83,14 @@ Responsibilities are split like this:
 - `data`: API calls, repository abstraction, and JSON models
 - `core`: constants and route generation
 
+## 📸 Screenshots
+
+| Character Screen |
+| :---: | :---: | :---: | :---: |
+| <img src="HomeScreen.png" width="180">  |
+
+
+
 ## Routing
 
 Defined routes:
