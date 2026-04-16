@@ -87,7 +87,7 @@ Responsibilities are split like this:
 
 | Character Screen |
 | :---: | :---: | :---: | :---: |
-| <img src="HomeScreen.png" width="180">  |
+| <img src="screenshots/characterScreen.png" width="180">  |
 
 
 
