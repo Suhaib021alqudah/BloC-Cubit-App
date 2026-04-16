@@ -58,7 +58,7 @@ lib/
 `-- presentation/
     |-- screen/
     |   |-- characters_screen.dart
-    |   `-- home_screen.dart
+    |   
     `-- widget/
         |-- character_widget.dart
         `-- list_button.dart
