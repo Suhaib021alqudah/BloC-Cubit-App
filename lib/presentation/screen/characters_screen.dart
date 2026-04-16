@@ -23,6 +23,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
 
   Widget searchFiledWidget() {
     return TextField(
+      style: const TextStyle(color: AppColors.lightGreen),
       controller: serachingTextController,
       cursorColor: AppColors.primaryColor,
       decoration: InputDecoration(
